@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import * as typeorm from 'typeorm';
+// import * as typeorm from 'typeorm';
 import { AssocManyAttribute } from './AssocManyAttribute';
 import { AssocOneAttribute } from './AssocOneAttribute';
 import { FactoryAttribute } from './FactoryAttribute';
@@ -51,17 +51,18 @@ export class Factory<T> {
   constructor(
     Entity: IConstructable<T>,
     attrs?: Attrs<T>,
-    readonly repositoryManager: IRepositoryManager<T> = typeorm
+    readonly repositoryManager?: IRepositoryManager<T>
   ) {
     this.Entity = Entity;
     this.attrs = attrs || [];
   }
 
   private get repository() {
+    console.log('repositoryManager ->', this.repositoryManager);
     // this.privateRepository =
     //   this.privateRepository || getRepository(this.Entity);
     // return this.privateRepository;
-    return this.repositoryManager.getRepository(this.Entity);
+    return this.repositoryManager!.getRepository(this.Entity);
   }
 
   /**
