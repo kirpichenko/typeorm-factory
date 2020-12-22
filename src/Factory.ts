@@ -1,4 +1,5 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import * as typeorm from 'typeorm';
 import { AssocManyAttribute } from './AssocManyAttribute';
 import { AssocOneAttribute } from './AssocOneAttribute';
 import { FactoryAttribute } from './FactoryAttribute';
@@ -11,17 +12,21 @@ export interface IConstructable<T> {
   new (): T;
 }
 
+export interface IRepositoryManager<T> {
+  getRepository: (entity: IConstructable<T>) => Repository<T>;
+}
+
 /**
  * Attribute type
  */
 export type Attr<U> = [
   keyof U,
 
-
+  (
     | Sequence<U[keyof U]>
     | AssocManyAttribute<any>
     | AssocOneAttribute<U[keyof U]>
-    | FactoryAttribute<any>
+    | FactoryAttribute<any>)
 ];
 
 export type Attrs<U> = Array<Attr<U>>;
@@ -40,18 +45,23 @@ export class Factory<T> {
    */
   public attrs: Attrs<T>;
 
-  private privateRepository: Repository<T> | undefined = undefined;
+  // private privateRepository: Repository<T> | undefined = undefined;
 
   /** constructor */
-  constructor(Entity: IConstructable<T>, attrs?: Attrs<T>) {
+  constructor(
+    Entity: IConstructable<T>,
+    attrs?: Attrs<T>,
+    readonly repositoryManager: IRepositoryManager<T> = typeorm
+  ) {
     this.Entity = Entity;
     this.attrs = attrs || [];
   }
 
   private get repository() {
-    this.privateRepository =
-      this.privateRepository || getRepository(this.Entity);
-    return this.privateRepository;
+    // this.privateRepository =
+    //   this.privateRepository || getRepository(this.Entity);
+    // return this.privateRepository;
+    return this.repositoryManager.getRepository(this.Entity);
   }
 
   /**
