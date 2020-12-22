@@ -72,7 +72,7 @@ export class Factory<T> {
       name,
       attr.clone()
     ]);
-    return new Factory<T>(this.Entity, clonedAttrs);
+    return new Factory<T>(this.Entity, clonedAttrs, this.repositoryManager);
   }
 
   /**
