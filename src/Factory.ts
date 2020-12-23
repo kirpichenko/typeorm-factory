@@ -58,7 +58,7 @@ export class Factory<T> {
   }
 
   private get repository() {
-    console.log('repositoryManager ->', this.repositoryManager);
+    // console.log('repositoryManager ->', this.repositoryManager);
     // this.privateRepository =
     //   this.privateRepository || getRepository(this.Entity);
     // return this.privateRepository;
